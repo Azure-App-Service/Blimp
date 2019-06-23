@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 
-namespace Blimp
+namespace blimp
 {
     public class DockerhubUtils
     {

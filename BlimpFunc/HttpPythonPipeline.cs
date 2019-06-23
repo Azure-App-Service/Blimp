@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public static class HttpPythonPipeline
     {
@@ -138,23 +138,23 @@ namespace Blimp
 
             // delete acr image
             _pipelineUtils.DeleteImage(
-                "Blimpacr",
+                "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
                 );
             _pipelineUtils.DeleteImage(
-                "Blimpacr",
+                "blimpacr",
                 br.TestOutputImageName.Split(':')[0],
                 br.TestOutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "Blimp-python-plan");
-            _pipelineUtils.DeleteWebapp(br.TestWebAppName, "Blimp-python-app-plan");
+            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-python-plan");
+            _pipelineUtils.DeleteWebapp(br.TestWebAppName, "blimp-python-app-plan");
 
             return true;
         }
@@ -164,8 +164,8 @@ namespace Blimp
             LogInfo("creating pipeling for python hostingstart " + br.Version);
 
             String pythonVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-python-hostingstart-{0}-task", pythonVersionDash);
-            String planName = "Blimp-python-plan";
+            String taskName = String.Format("blimp-python-hostingstart-{0}-task", pythonVersionDash);
+            String planName = "blimp-python-plan";
 
             LogInfo("creating acr task for python hostingstart " + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.OutputRepoURL, br.OutputRepoBranchName, br.OutputRepoName,
@@ -184,8 +184,8 @@ namespace Blimp
             LogInfo("Creating pipeline for Python app " + br.Version);
 
             String pythonVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-python-app-{0}-task", pythonVersionDash);
-            String planName = "Blimp-python-app-plan";
+            String taskName = String.Format("blimp-python-app-{0}-task", pythonVersionDash);
+            String planName = "blimp-python-app-plan";
 
             LogInfo("Creating acr task for Python app" + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.TestOutputRepoURL, br.TestOutputRepoBranchName, br.TestOutputRepoName,
@@ -204,7 +204,7 @@ namespace Blimp
             LogInfo("Creating github files for Python " + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TemplateRepoName);
@@ -236,7 +236,7 @@ namespace Blimp
                 new List<int> { 1 });
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[Blimp] Add python {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[blimp] Add python {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);
@@ -250,7 +250,7 @@ namespace Blimp
             LogInfo("Creating github files for Python app" + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TestTemplateRepoName);
@@ -271,18 +271,18 @@ namespace Blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.TestOutputRepoOrgName, br.TestOutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
+            _githubUtils.Checkout(localOutputRepoPath, br.TestOutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                  String.Format("{0}\\{1}", localTemplateRepoPath, br.TestTemplateName),
                 localOutputRepoPath);
             _githubUtils.FillTemplate(
                 String.Format("{0}\\DockerFile", localOutputRepoPath),
-                new List<String>{ String.Format("FROM Blimpacr.azurecr.io/{0}", br.TestBaseImageName) },
+                new List<String>{ String.Format("FROM blimpacr.azurecr.io/{0}", br.TestBaseImageName) },
                 new List<int> { 1 });
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.TestOutputRepoBranchName, String.Format("[Blimp] Add python {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.TestOutputRepoBranchName, String.Format("[blimp] Add python {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);

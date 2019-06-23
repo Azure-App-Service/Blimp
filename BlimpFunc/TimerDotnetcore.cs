@@ -33,7 +33,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.ApplicationInsights;
 
-namespace Blimp
+namespace blimp
 {
     public static class TimerDotnetcore
     {
@@ -62,7 +62,7 @@ namespace Blimp
                     {
                         List<String> tag = new List<String> { String.Format("oryxprod/{0}", t) };
                         HttpClient client = new HttpClient();
-                        String url = String.Format("https://Blimpfunc.azurewebsites.net/api/HttpDotnetcorePipeline?code={0}", secretsUtils._BlimpfuncMaster);
+                        String url = String.Format("https://blimpfunc.azurewebsites.net/api/HttpDotnetcorePipeline?code={0}", secretsUtils._blimpfuncMaster);
                         String body = "{\"newTags\": " + JsonConvert.SerializeObject(tag) + "}";
                         client.Timeout = new TimeSpan(3, 0, 0);
 

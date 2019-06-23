@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using LibGit2Sharp.Handlers;
 using System.Security.AccessControl;
-using Blimp;
+using blimp;
 
-namespace BlimpPR
+namespace blimpPR
 {
     class Program
     {
@@ -91,10 +91,10 @@ namespace BlimpPR
             String _gitToken = File.ReadAllText("../../../gitToken.txt");
             // clone master
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            String root = String.Format("D:\\local\\temp\\BlimpPR{0}", timeStamp);
+            String root = String.Format("D:\\local\\temp\\blimpPR{0}", timeStamp);
             String upstream = root + "\\" + stack;
             String upstreamURL = String.Format("https://github.com/Azure-App-Service/{0}.git", stack);
-            String branch = String.Format("Blimp{0}", timeStamp);
+            String branch = String.Format("blimp{0}", timeStamp);
             Repository.Clone(upstreamURL, upstream, new CloneOptions { BranchName = "dev" });
 
             // branch
@@ -180,13 +180,13 @@ namespace BlimpPR
             // git commit
             // Create the committer's signature and commit
             //_log.Info("git commit");
-            Signature author = new Signature("Blimp", "patle@microsoft.com", DateTime.Now);
+            Signature author = new Signature("blimp", "patle@microsoft.com", DateTime.Now);
             Signature committer = author;
 
             // Commit to the repository
             try
             {
-                Commit commit = repo.Commit("Blimp", author, committer);
+                Commit commit = repo.Commit("blimp", author, committer);
             }
             catch (Exception e)
             {

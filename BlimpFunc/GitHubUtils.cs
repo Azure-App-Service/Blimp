@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
-namespace Blimp
+namespace blimp
 {
     public class GitHubUtils
     {
@@ -52,7 +52,7 @@ namespace Blimp
                 {
                     HttpClient client = new HttpClient();
                     client.DefaultRequestHeaders.UserAgent.ParseAdd("patricklee2");
-                    String url = String.Format("https://api.github.com/repos/{0}/{1}", orgName, repoName);
+                    String url = String.Format("https://api.github.com/repos/{0}/{1}?access_token={2}", orgName, repoName, _gitToken);
 
                     HttpResponseMessage response = await client.GetAsync(url);
 
@@ -409,7 +409,7 @@ namespace Blimp
                         // git commit
                         // Create the committer's signature and commit
                         //_log.Info("git commit");
-                        Signature author = new Signature("Blimp", "patle@microsoft.com", DateTime.Now);
+                        Signature author = new Signature("blimp", "patle@microsoft.com", DateTime.Now);
                         Signature committer = author;
 
                         // Commit to the repository

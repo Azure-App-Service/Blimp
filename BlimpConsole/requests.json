@@ -9,7 +9,7 @@
         "outputImageName": "ruby:dev-2.3.8",
         "version": "2.3.8",
         "outputRepoBranchName": "dev",
-        "webAppName": "Blimp-ruby-2-3-8-dev",
+        "webAppName": "blimp-ruby-2-3-8-dev",
         "templateRepoURL": "https://github.com/Azure-App-Service/ruby-template.git",
         "saveArtifacts": true
     }

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public static class HttpDotnetcorePipeline
     {
@@ -107,15 +107,15 @@ namespace Blimp
 
             // delete acr image
             _pipelineUtils.DeleteImage(
-                "Blimpacr",
+                "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "Blimp-dotnetcore-plan");
+            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-dotnetcore-plan");
             return true;
         }
 
@@ -151,8 +151,8 @@ namespace Blimp
         public static async Task<Boolean> CreateDotnetcoreHostingStartPipeline(BuildRequest br)
         {
             String dotnetcoreVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-dotnetcore-hostingstart-{0}-task", dotnetcoreVersionDash);
-            String planName = "Blimp-dotnetcore-plan";
+            String taskName = String.Format("blimp-dotnetcore-hostingstart-{0}-task", dotnetcoreVersionDash);
+            String planName = "blimp-dotnetcore-plan";
 
             LogInfo("creating acr task for dotnetcore hostingstart " + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.OutputRepoURL, br.OutputRepoBranchName, br.OutputRepoName,
@@ -191,7 +191,7 @@ namespace Blimp
             LogInfo("creating github files for dotnetcore " + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TemplateRepoName);
@@ -232,7 +232,7 @@ namespace Blimp
             );
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[Blimp] Add dotnetcore {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[blimp] Add dotnetcore {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);

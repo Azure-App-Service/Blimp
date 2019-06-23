@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public class BuildRequest
     {

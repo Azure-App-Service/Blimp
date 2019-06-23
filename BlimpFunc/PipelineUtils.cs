@@ -30,7 +30,7 @@ using Microsoft.Extensions.Logging;
 using RestSharp;
 using NameValuePair = Microsoft.Azure.Management.WebSites.Models.NameValuePair;
 
-namespace Blimp
+namespace blimp
 {
     public class PipelineUtils
     {
@@ -39,8 +39,8 @@ namespace Blimp
         private WebSiteManagementClient _webappClient;
         private String _subscriptionID;
 
-        private String _rgName = "Blimprg";
-        private String _acrName = "Blimpacr";
+        private String _rgName = "blimpRG";
+        private String _acrName = "blimpacr";
 
         public PipelineUtils(ContainerRegistryManagementClient registryClient, WebSiteManagementClient webappClient, String subscriptionID)
         {
@@ -54,21 +54,19 @@ namespace Blimp
         {
             //_log.Info("creating task: " + taskName);
 
-            RestClient client = new RestClient("https://dev.azure.com/patle/23b82bfb-5bab-4c97-8e1a-1ae8d771e222/_apis/build/builds?api-version=5.0");
+            RestClient client = new RestClient("https://dev.azure.com/patle/50cbdf79-e1ae-48d8-bb9c-8cc4a4922436/_apis/build/builds?api-version=5.0");
             var request = new RestRequest(Method.POST);
             request.AddHeader("cache-control", "no-cache");
-            request.AddHeader("Authorization", $"Basic {authToken}");
+            String token = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}:{1}", "patle", authToken)));
+            request.AddHeader("Authorization", String.Format("Basic {0}", token));
             request.AddHeader("Content-Type", "application/json");
             String body =
                 $@"{{
-                    ""queue"": {{
-                        ""id"": 8
-                    }},
                     ""definition"": {{
-                        ""id"": 2
+                        ""id"": 19
                     }},
                     ""project"": {{
-                        ""id"": ""23b82bfb-5bab-4c97-8e1a-1ae8d771e222""
+                        ""id"": ""50cbdf79-e1ae-48d8-bb9c-8cc4a4922436""
                     }},
                     ""sourceBranch"": ""master"",
                     ""sourceVersion"": """",
@@ -89,9 +87,9 @@ namespace Blimp
             String runId = json.id;
             runId = runId.Replace("\"", "");
 
-            client = new RestClient($"https://dev.azure.com/patle/23b82bfb-5bab-4c97-8e1a-1ae8d771e222/_apis/build/builds/{runId}?api-version=5.0");
+            client = new RestClient($"https://dev.azure.com/patle/50cbdf79-e1ae-48d8-bb9c-8cc4a4922436/_apis/build/builds/{runId}?api-version=5.0");
             request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", $"Basic {authToken}");
+            request.AddHeader("Authorization", String.Format("Basic {0}", token));
 
             while (true)
             {
@@ -106,12 +104,15 @@ namespace Blimp
                     {
                         break;
                     }
-                    throw new Exception($"run failed, id: {runId} message: {result}");
+                    throw new Exception(
+                        $"Create image run failed, runid: {runId}, \n" +
+                        $"url: https://dev.azure.com/patle/blimp/_build/results?buildId={runId}, \n" +
+                        $"output: {result}");
                 }
                 System.Threading.Thread.Sleep(10 * 1000);  // 10 sec
             }
 
-            return "";
+            return runId;
         }
 
         public string CreateWebapp(String version, String acrPassword, String appName, String imageName, String planName)

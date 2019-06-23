@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
-using Blimp;
+using blimp;
 
-namespace Blimpconsole
+namespace blimpconsole
 {
     class Program
     {
@@ -82,9 +82,9 @@ namespace Blimpconsole
             Console.WriteLine(String.Format("making tag: {0} {1}", br.Stack, br.Version));
             String stack = String.Format("{0}{1}", br.Stack.ToUpper()[0], br.Stack.ToLower().Substring(1));
             String secretKey = File.ReadAllText("../../../secret.txt");
-            //String url = String.Format("https://Blimpfunc.azurewebsites.net/api/Http{0}Pipeline?code={1}", stack, secretKey);
+            //String url = String.Format("https://blimpfunc.azurewebsites.net/api/Http{0}Pipeline?code={1}", stack, secretKey);
             //String url = String.Format("http://localhost:7071/api/Http{0}Pipeline", stack);
-            //String url = String.Format("https://Blimpfunc-test.azurewebsites.net/api/HttpBuildPipeline_HttpStart?code={0}", secretKey);
+            //String url = String.Format("https://blimpfunc-test.azurewebsites.net/api/HttpBuildPipeline_HttpStart?code={0}", secretKey);
             String url = "http://localhost:7071/api/HttpBuildPipeline_HttpStart";
 
             String body = JsonConvert.SerializeObject(br);
