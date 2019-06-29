@@ -24,23 +24,23 @@ namespace blimpconsole
             String text = "";
             List<BuildRequest> buildRequests = new List<BuildRequest>();
 
-            //text = getStack("kudu", "dev");
+            //text = getStack("kudu", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("dotnetcore", "dev");
+            //text = getStack("dotnetcore", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("node", "dev");
+            //text = getStack("node", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            text = getStack("php", "dev");
+            //text = getStack("php", "dev", "blessedImageConfig-dev.json");
+            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
+
+            //text = getStack("python", "dev", "blessedImageConfig-dev.json");
+            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
+
+            text = getStack("ruby", "dev", "blessedImageConfig-dev.json");
             buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
-
-            //text = getStack("python", "dev");
-            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
-
-            //text = getStack("ruby", "dev");
-            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
             //text = File.ReadAllText("../../../requests.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
@@ -52,9 +52,9 @@ namespace blimpconsole
             }
         }
 
-        static String getStack(String stack, String branchName)
+        static String getStack(String stack, String branchName, string file)
         {
-            return getConfig($"https://raw.githubusercontent.com/Azure-App-Service/{stack}-template/{branchName}/blessedImageConfig-dev.json");
+            return getConfig($"https://raw.githubusercontent.com/Azure-App-Service/{stack}-template/{branchName}/{file}");
         }
 
         static String getConfig(String gitURL)

@@ -448,5 +448,34 @@ namespace blimp
                 }
             }
         }
+
+        public Boolean Push(String gitPath, String branch, String remoteUrl)
+        {
+            int tries = 0;
+            while (true)
+            {
+                try
+                {
+                    using (Repository repo = new Repository(gitPath))
+                    {
+                        repo.Network.Remotes.Update("origin",  r => r.Url = new Uri(remoteUrl).AbsoluteUri);
+                        Remote remote = repo.Network.Remotes["origin"];
+                        var options = new PushOptions();
+                        repo.Network.Push(repo.Branches["master"]);
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tries = tries + 1;
+                    System.Threading.Thread.Sleep(1 * 60 * 1000); // sleep 1 min
+                    if (tries > 3)
+                    {
+                        //_log.Info("delete repo" + githubURL);
+                        throw ex;
+                    }
+                }
+            }
+        }
     }
 }

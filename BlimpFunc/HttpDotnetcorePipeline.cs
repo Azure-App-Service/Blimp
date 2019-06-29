@@ -168,22 +168,7 @@ namespace blimp
 
         private static String getZip(String version)
         {
-            switch (version) {
-                case "1.0":
-                    return version;
-                case "1.1":
-                    return version;
-                case "2.0":
-                    return version;
-                case "2.1":
-                    return version;
-                case "2.2":
-                    return version;
-                default:
-                    LogInfo("unexpected version: " + version);
-                    throw new Exception("unexpected version: " + version);
-                }
-
+            return version;
         }
 
         private static async Task<Boolean> PushGithubAsync(BuildRequest br)
@@ -205,6 +190,7 @@ namespace blimp
                     br.OutputRepoURL,
                     localOutputRepoPath,
                     br.OutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             }
             else
             {
@@ -212,7 +198,6 @@ namespace blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.OutputRepoOrgName, br.OutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TemplateName),

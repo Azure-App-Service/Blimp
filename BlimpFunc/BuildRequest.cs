@@ -330,11 +330,11 @@ namespace blimp
             {
                 if (SaveArtifacts)
                 {
-                    WebAppName = String.Format("Blimp-{0}-hostingstart-{1}-site", Stack, Version.Replace(".", "-"));
+                    WebAppName = String.Format("blimp-{0}-{1}", Stack, Version.Replace(".", "-"));
                 }
                 else
                 {
-                    WebAppName = String.Format("Blimp-{0}-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
+                    WebAppName = String.Format("blimp-{0}-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
                 }
             }
             if (Email == null)
@@ -407,11 +407,11 @@ namespace blimp
             {
                 if (SaveArtifacts)
                 {
-                    TestWebAppName = String.Format("Blimp-{0}-app-{1}-site", Stack, Version.Replace(".", "-"));
+                    TestWebAppName = String.Format("blimp-{0}-app-{1}-site", Stack, Version.Replace(".", "-"));
                 }
                 else
                 {
-                    TestWebAppName = String.Format("Blimp-{0}-app-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
+                    TestWebAppName = String.Format("blimp-{0}-app-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
                 }
             }
             if (XdebugTemplateRepoURL == null)

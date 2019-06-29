@@ -242,6 +242,7 @@ namespace blimp
                     br.OutputRepoURL,
                     localOutputRepoPath,
                     br.OutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             }
             else
             {
@@ -249,7 +250,6 @@ namespace blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.OutputRepoOrgName, br.OutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TemplateName),
@@ -290,6 +290,7 @@ namespace blimp
                    br.XdebugOutputRepoURL,
                    localOutputRepoPath,
                    br.XdebugOutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.XdebugOutputRepoBranchName);
             }
             else
             {
@@ -297,7 +298,6 @@ namespace blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.XdebugOutputRepoOrgName, br.XdebugOutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.XdebugOutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.XdebugTemplateName),
@@ -337,6 +337,7 @@ namespace blimp
                     br.TestOutputRepoURL,
                     localOutputRepoPath,
                     br.TestOutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.TestOutputRepoBranchName);
             }
             else
             {
@@ -344,7 +345,6 @@ namespace blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.TestOutputRepoOrgName, br.TestOutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.TestOutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TestTemplateName),

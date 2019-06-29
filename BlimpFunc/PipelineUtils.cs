@@ -138,14 +138,73 @@ namespace blimp
                                 LinuxFxVersion = String.Format("DOCKER|{0}.azurecr.io/{1}", _acrName, imageName),
                                 AppSettings = new List<NameValuePair>
                                 {
-                            new NameValuePair("DOCKER_REGISTRY_SERVER_USERNAME", _acrName),
-                            new NameValuePair("DOCKER_REGISTRY_SERVER_PASSWORD", acrPassword),
-                            new NameValuePair("DOCKER_REGISTRY_SERVER_URL", string.Format("https://{0}.azurecr.io", _acrName)),
-                            new NameValuePair("DOCKER_ENABLE_CI", "false"),
-                            new NameValuePair("WEBSITES_ENABLE_APP_SERVICE_STORAGE", "false")
+                                    new NameValuePair("DOCKER_REGISTRY_SERVER_USERNAME", _acrName),
+                                    new NameValuePair("DOCKER_REGISTRY_SERVER_PASSWORD", acrPassword),
+                                    new NameValuePair("DOCKER_REGISTRY_SERVER_URL", string.Format("https://{0}.azurecr.io", _acrName)),
+                                    new NameValuePair("DOCKER_ENABLE_CI", "false"),
+                                    new NameValuePair("WEBSITES_ENABLE_APP_SERVICE_STORAGE", "false")
                                 }
                             }
                         });
+                    return "";
+                }
+                catch (Exception e)
+                {
+                    if (tries >= 3)
+                    {
+                        throw e;
+                    }
+                    System.Threading.Thread.Sleep(60 * 1000);
+                    tries = tries + 1;
+                }
+            }
+        }
+
+        public string CreateWebappGitDeploy(String version, String acrPassword, String appName,
+            String imageName, String planName, String targetRepo, GitHubUtils gitHubUtils)
+        {
+            int tries = 0;
+            while (true)
+            {
+                try
+                {
+                    //_log.Info("creating webapp");
+
+                    _webappClient.WebApps.Delete(_rgName, appName, false, false);
+                    AppServicePlan plan = _webappClient.AppServicePlans.Get(_rgName, planName);
+
+                    //_log.Info("creating site :" + appName);
+                    _webappClient.WebApps.CreateOrUpdate(_rgName, appName,
+                        new Site
+                        {
+                            Location = "westus2",
+                            ServerFarmId = plan.Id,
+                            SiteConfig = new SiteConfig
+                            {
+                                LinuxFxVersion = String.Format("DOCKER|{0}.azurecr.io/{1}", _acrName, imageName),
+                                AppSettings = new List<NameValuePair>
+                                {
+                                    //new NameValuePair("DOCKER_REGISTRY_SERVER_USERNAME", _acrName),
+                                    new NameValuePair("DOCKER_REGISTRY_SERVER_PASSWORD", acrPassword),
+                                    new NameValuePair("DOCKER_REGISTRY_SERVER_URL", string.Format("https://{0}.azurecr.io", _acrName)),
+                                    new NameValuePair("DOCKER_ENABLE_CI", "false"),
+                                    new NameValuePair("WEBSITES_ENABLE_APP_SERVICE_STORAGE", "false")
+                                }
+                            }
+                        });
+                        
+                    //get publishing profile
+                    var publishingProfile = _webappClient.WebApps.ListPublishingCredentials(_rgName, appName);
+
+                    //clone app repo
+                    String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    String random = new Random().Next(0, 9999).ToString();
+                    String path = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
+                    gitHubUtils.Clone(targetRepo, path, "master");
+
+                    //push repo
+                    gitHubUtils.Push(path, "master", publishingProfile.ScmUri + "/" + appName + ".git");
+                    gitHubUtils.Delete(path);
                     return "";
                 }
                 catch (Exception e)
