@@ -109,8 +109,8 @@ namespace blimp
                     tries--;
                     _mailUtils._version = br.Version;
                     LogInfo("creating pipeline for Ruby " + br.Version);
-                    //await PushGithubAsync(br);
-                    //await CreateRubyPipeline(br);
+                    await PushGithubAsync(br);
+                    await CreateRubyPipeline(br);
                     await PushGithubAppAsync(br);
                     await CreateRubyAppPipeline(br);
 
