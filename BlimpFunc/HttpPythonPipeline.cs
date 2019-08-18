@@ -153,7 +153,7 @@ namespace blimp
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-python-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-python-plan");
             _pipelineUtils.DeleteWebapp(br.TestWebAppName, "blimp-python-app-plan");
 
             return true;

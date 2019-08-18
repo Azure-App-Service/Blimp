@@ -115,7 +115,7 @@ namespace blimp
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-dotnetcore-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-dotnetcore-plan");
             return true;
         }
 

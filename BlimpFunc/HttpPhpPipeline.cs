@@ -162,7 +162,7 @@ namespace blimp
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-php-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-php-plan");
             _pipelineUtils.DeleteWebapp(br.TestWebAppName, "blimp-php-app-plan");
 
             return true;

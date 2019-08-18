@@ -18,11 +18,11 @@ namespace blimpPR
         {
             //String stack = "node";
             //createPR(stack);
-            //createPR("dotnetcore");
+            createPR("dotnetcore");
             createPR("node");
-            //createPR("php");
-            //createPR("python");
-            //createPR("ruby");
+            createPR("php");
+            createPR("python");
+            createPR("ruby");
 
             while (true)    //sleep until user exits
             {

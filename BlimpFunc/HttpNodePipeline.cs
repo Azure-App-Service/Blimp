@@ -161,7 +161,7 @@ namespace blimp
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-node-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-node-plan");
             _pipelineUtils.DeleteWebapp(br.TestWebAppName, "blimp-node-app-plan");
 
             return true;

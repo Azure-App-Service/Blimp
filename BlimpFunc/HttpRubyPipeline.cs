@@ -146,7 +146,7 @@ namespace blimp
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-ruby-hostingstart-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-ruby-hostingstart-plan");
             return true;
         }
 

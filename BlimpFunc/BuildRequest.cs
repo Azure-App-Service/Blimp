@@ -168,12 +168,7 @@ namespace blimp
 
         private static String getPythonTemplate(String version)
         {
-            if (new List<String> { "2.7", "3.6", "3.7" }.Contains(version))
-            {
-                return String.Format("template-{0}", version);
-            }
-
-            throw new Exception(String.Format("unexpected python version: {0}", version));
+            return String.Format("template-{0}", version);
         }
 
         private static String getRubyTemplate(String version)
@@ -445,7 +440,8 @@ namespace blimp
                 if (SaveArtifacts)
                 {
                     XdebugOutputRepoURL = String.Format("https://github.com/blessedimagepipeline/{0}-xdebug-{1}.git", Stack, Version);
-                }else
+                }
+                else
                 {
                     XdebugOutputRepoURL = String.Format("https://github.com/blessedimagepipeline/{0}-xdebug-{1}-{2}.git", Stack, Version, randomTag);
                 }
