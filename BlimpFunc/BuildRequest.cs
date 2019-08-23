@@ -75,7 +75,7 @@ namespace blimp
         [JsonProperty("testTemplateRepoName")]
         public string TestTemplateRepoName;
 
-        [JsonProperty("tesTemplateName")]
+        [JsonProperty("testTemplateName")]
         public string TestTemplateName;
 
         [JsonProperty("testTemplateRepoBranchName")]

@@ -137,13 +137,13 @@ namespace blimp
             await _githubUtils.DeleteGithubAsync(br.OutputRepoOrgName, br.OutputRepoName);
 
             // delete acr image
-            _pipelineUtils.DeleteImage(
+            /*_pipelineUtils.DeleteImage(
                 "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
                 "blimpacr",
                 _secretsUtils._acrPassword
-                );
+                );*/
 
             // delete webapp
             //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-ruby-hostingstart-plan");

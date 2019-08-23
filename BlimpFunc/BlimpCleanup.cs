@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Management.ContainerRegistry;
 using Microsoft.Azure.Management.WebSites;
 using Microsoft.Azure.Management.WebSites.Models;
-using blimp
-    ;
+using blimp;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,11 +21,12 @@ namespace BlimpFunc
         public static WebSiteManagementClient webClient { get; private set; }
 
         [FunctionName("BlimpCleanup")]
-        public static void Run([TimerTrigger("0 0 * * * 0")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 0 * * * 0")]TimerInfo myTimer, ILogger log)
         {
             // clean up blimp app every sunday
             secretsUtils = new SecretsUtils();
-            secretsUtils.GetSecrets();
+            await secretsUtils.GetSecrets();
+            
             pipelineUtils = new PipelineUtils(
                 new ContainerRegistryManagementClient(secretsUtils._credentials),
                 new WebSiteManagementClient(secretsUtils._credentials),
@@ -39,6 +40,11 @@ namespace BlimpFunc
             DeleteApps("blimp-php-plan");
             DeleteApps("blimp-python-plan");
             DeleteApps("blimp-ruby-plan");
+            DeleteImages("blimpacr", "dotnetcore");
+            DeleteImages("blimpacr", "node");
+            DeleteImages("blimpacr", "php");
+            DeleteImages("blimpacr", "python");
+            DeleteImages("blimpacr", "ruby");
         }
 
         private static void DeleteApps(String planName)
@@ -57,6 +63,22 @@ namespace BlimpFunc
         private static bool SaveApp(String name)
         {
             return (name.EndsWith("dev") || name.EndsWith("master") || name.EndsWith("save"));
+        }
+
+        private static void DeleteImages(String acr, String stack)
+        {
+            List<String> images = pipelineUtils.ListImages(acr, stack, acr, secretsUtils._acrPassword)
+                                    .Where(x => !SaveImage(x))
+                                    .ToList();
+            foreach (String t in images)
+            {
+                pipelineUtils.DeleteImage(acr, stack, t, acr, secretsUtils._acrPassword);
+            }
+        }
+
+        private static bool SaveImage(String name)
+        {
+            return (name.StartsWith("dev") || name.StartsWith("master") || name.StartsWith("save"));
         }
     }
 }

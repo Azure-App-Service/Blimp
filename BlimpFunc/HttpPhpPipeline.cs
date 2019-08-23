@@ -139,13 +139,13 @@ namespace blimp
             await _githubUtils.DeleteGithubAsync(br.TestOutputRepoOrgName, br.TestOutputRepoName);
 
             // delete acr image
-            _pipelineUtils.DeleteImage(
+            /*_pipelineUtils.DeleteImage(
                 "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
                 "blimpacr",
                 _secretsUtils._acrPassword
-                );
+                );*/
             _pipelineUtils.DeleteImage(
                 "blimpacr",
                 br.XdebugOutputImageName.Split(':')[0],

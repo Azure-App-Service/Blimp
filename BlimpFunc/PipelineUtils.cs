@@ -192,7 +192,7 @@ namespace blimp
                                 }
                             }
                         });
-                        
+
                     //get publishing profile
                     var publishingProfile = _webappClient.WebApps.ListPublishingCredentials(_rgName, appName);
 
@@ -265,9 +265,33 @@ namespace blimp
                     {
                         throw e;
                     }
-                     System.Threading.Thread.Sleep(60 * 1000);
+                    System.Threading.Thread.Sleep(60 * 1000);
                     tries = tries + 1;
                 }
+            }
+        }
+
+        public List<String> ListImages(String acr, String repo, String username, String password)
+        {
+            try
+            {
+                var client = new RestClient($"https://{acr}.azurecr.io/v2/{repo}/tags/list");
+                var request = new RestRequest(Method.GET);
+                request.AddHeader("cache-control", "no-cache");
+                request.AddHeader("Connection", "keep-alive");
+                request.AddHeader("Accept-Encoding", "gzip, deflate");
+                request.AddHeader("Host", $"{acr}.azurecr.io");
+                request.AddHeader("Cache-Control", "no-cache");
+                request.AddHeader("Accept", "*/*");
+                String token = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}:{1}", username, password)));
+                request.AddHeader("Authorization", String.Format("Basic {0}", token));
+                IRestResponse response = client.Execute(request);
+                var json = JsonConvert.DeserializeObject<dynamic>(response.Content.ToString());
+                return json.tags.ToObject<List<String>>();
+            }
+            catch (Exception e)
+            {
+                return new List<String>();
             }
         }
     }
