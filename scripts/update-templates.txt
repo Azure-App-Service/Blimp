@@ -1,0 +1,46 @@
+cd ../dotnetcore-template
+git checkout dev
+git pull upstream dev
+sed -i 's/20190826.1/20190826.2/g' *.json
+code .
+
+git diff
+git add .
+git commit -m "ant85 20190826.2"
+git push upstream dev
+
+
+cd ../php-template
+git checkout dev
+git pull upstream dev
+sed -i 's/20190823.2/20190826.2/g' *.json
+code .
+
+git diff
+git add .
+git commit -m "ant85 20190826.2"
+git push upstream dev
+
+
+cd ../python-template
+git checkout dev
+git pull upstream dev
+sed -i 's/20190823.2/20190826.2/g' *.json
+code .
+git diff
+
+git add .
+git commit -m "ant85 20190826.2"
+git push upstream dev
+
+
+cd ../node-template
+git checkout dev
+git pull upstream dev
+sed -i 's/20190823.2/20190826.2/g' *.json 
+code .
+git diff
+
+git add .
+git commit -m "ant85 20190826.2"
+git push upstream dev
