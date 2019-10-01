@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
-namespace Blimp
+namespace blimp
 {
     public class GitHubUtils
     {
@@ -52,7 +52,7 @@ namespace Blimp
                 {
                     HttpClient client = new HttpClient();
                     client.DefaultRequestHeaders.UserAgent.ParseAdd("patricklee2");
-                    String url = String.Format("https://api.github.com/repos/{0}/{1}", orgName, repoName);
+                    String url = String.Format("https://api.github.com/repos/{0}/{1}?access_token={2}", orgName, repoName, _gitToken);
 
                     HttpResponseMessage response = await client.GetAsync(url);
 
@@ -409,7 +409,7 @@ namespace Blimp
                         // git commit
                         // Create the committer's signature and commit
                         //_log.Info("git commit");
-                        Signature author = new Signature("Blimp", "patle@microsoft.com", DateTime.Now);
+                        Signature author = new Signature("blimp", "patle@microsoft.com", DateTime.Now);
                         Signature committer = author;
 
                         // Commit to the repository
@@ -433,6 +433,35 @@ namespace Blimp
                                     Password = String.Empty
                                 });
                         repo.Network.Push(repo.Branches[branch], options);
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tries = tries + 1;
+                    System.Threading.Thread.Sleep(1 * 60 * 1000); // sleep 1 min
+                    if (tries > 3)
+                    {
+                        //_log.Info("delete repo" + githubURL);
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        public Boolean Push(String gitPath, String branch, String remoteUrl)
+        {
+            int tries = 0;
+            while (true)
+            {
+                try
+                {
+                    using (Repository repo = new Repository(gitPath))
+                    {
+                        repo.Network.Remotes.Update("origin",  r => r.Url = new Uri(remoteUrl).AbsoluteUri);
+                        Remote remote = repo.Network.Remotes["origin"];
+                        var options = new PushOptions();
+                        repo.Network.Push(repo.Branches["master"]);
                         return true;
                     }
                 }

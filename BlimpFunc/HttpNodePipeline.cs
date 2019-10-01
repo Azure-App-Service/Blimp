@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public static class HttpNodePipeline
     {
@@ -145,24 +145,24 @@ namespace Blimp
             await _githubUtils.DeleteGithubAsync(br.TestOutputRepoOrgName, br.TestOutputRepoName);
 
             // delete acr image
-            _pipelineUtils.DeleteImage(
-                "Blimpacr",
+            /*_pipelineUtils.DeleteImage(
+                "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
-                );
+                );*/
             _pipelineUtils.DeleteImage(
-                "Blimpacr",
+                "blimpacr",
                 br.TestOutputImageName.Split(':')[0],
                 br.TestOutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
                 );
 
             // delete webapp
-            _pipelineUtils.DeleteWebapp(br.WebAppName, "Blimp-node-plan");
-            _pipelineUtils.DeleteWebapp(br.TestWebAppName, "Blimp-node-app-plan");
+            //_pipelineUtils.DeleteWebapp(br.WebAppName, "blimp-node-plan");
+            _pipelineUtils.DeleteWebapp(br.TestWebAppName, "blimp-node-app-plan");
 
             return true;
         }
@@ -170,8 +170,8 @@ namespace Blimp
         public static async Task<Boolean> CreateNodeHostingStartPipeline(BuildRequest br)
         {
             String nodeVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-node-hostingstart-{0}-task", nodeVersionDash);
-            String planName = "Blimp-node-plan";
+            String taskName = String.Format("blimp-node-hostingstart-{0}-task", nodeVersionDash);
+            String planName = "blimp-node-plan";
 
             LogInfo("creating acr task for node hostingstart " + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.OutputRepoURL, br.OutputRepoBranchName, br.OutputRepoName,
@@ -188,8 +188,8 @@ namespace Blimp
         public static async Task<Boolean> CreateNodeAppPipeline(BuildRequest br)
         {
             String nodeVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-node-app-{0}-task", nodeVersionDash);
-            String planName = "Blimp-node-app-plan";
+            String taskName = String.Format("blimp-node-app-{0}-task", nodeVersionDash);
+            String planName = "blimp-node-app-plan";
 
             LogInfo("creating acr task for node app" + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.TestOutputRepoURL, br.TestOutputRepoBranchName, br.TestOutputRepoName,
@@ -208,7 +208,7 @@ namespace Blimp
             LogInfo("creating github files for node " + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TemplateRepoName);
@@ -222,6 +222,7 @@ namespace Blimp
                     br.OutputRepoURL,
                     localOutputRepoPath,
                     br.OutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             }
             else
             {
@@ -229,7 +230,6 @@ namespace Blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.OutputRepoOrgName, br.OutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TemplateName),
@@ -240,7 +240,7 @@ namespace Blimp
                 new List<int> { 1 });
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[Blimp] Add node {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[blimp] Add node {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);
@@ -255,7 +255,7 @@ namespace Blimp
             LogInfo("creating github files for node app " + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TestTemplateRepoName);
@@ -269,6 +269,7 @@ namespace Blimp
                     br.TestOutputRepoURL,
                     localOutputRepoPath,
                     br.TestOutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.TestOutputRepoBranchName);
             }
             else
             {
@@ -276,18 +277,17 @@ namespace Blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.TestOutputRepoOrgName, br.TestOutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TestTemplateName),
                 localOutputRepoPath);
             _githubUtils.FillTemplate(
                 String.Format("{0}\\DockerFile", localOutputRepoPath),
-                new List<String> { String.Format("FROM Blimpacr.azurecr.io/{0}", br.TestBaseImageName) },
+                new List<String> { String.Format("FROM blimpacr.azurecr.io/{0}", br.TestBaseImageName) },
                 new List<int> { 1 });
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.TestOutputRepoBranchName, String.Format("[Blimp] Add node {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.TestOutputRepoBranchName, String.Format("[blimp] Add node {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);

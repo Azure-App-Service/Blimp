@@ -6,7 +6,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Logging;
 
-namespace Blimp
+namespace blimp
 {
     public class MailUtils
     {
@@ -34,7 +34,7 @@ namespace Blimp
             String content = "";
             if (versions.Count > 0)
             {
-                subject = String.Format("Blimp has built new {0} images", _stack);
+                subject = String.Format("blimp has built new {0} images", _stack);
                 content = String.Format("new {0} images build {1}\n{2}", _stack, String.Join(", ", versions.ToArray()), log);
             }
             else
@@ -52,13 +52,13 @@ namespace Blimp
             {
                 new EmailAddress(_buildRequest.Email)
             };
-            String subject = String.Format("{0} {1} Blimp has failed", _stack, _version);
+            String subject = String.Format("{0} {1} blimp has failed", _stack, _version);
             await sendEmail(recipients, subject, String.Format("{0}\n{1}", failure, log));
         }
 
         private async System.Threading.Tasks.Task sendEmail(List<EmailAddress> recipients, String subject, String content)
         {
-            EmailAddress from = new EmailAddress("Blimp@microsoft.com", "Blimp");
+            EmailAddress from = new EmailAddress("blimp@microsoft.com", "blimp");
             List<EmailAddress> to = recipients;
             String plainTextContent = content;
             String htmlContent = content;

@@ -1,0 +1,23 @@
+
+bash
+git checkout dev
+git pull origin dev
+git checkout -B developer/patle/ant85
+
+code E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/official.definitions
+code E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/Private.definitions
+code E:/wagit/AAPT/Antares/Websites/src/Hosting/setup/Database/Update/update_availablestacks.sql
+
+sed -i s/1908051448/1908260522/g E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/official.definitions
+sed -i s/1908051448/1908260522/g E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/Private.definitions
+sed -i s/1908051448/1908260522/g E:/wagit/AAPT/Antares/Websites/src/Hosting/setup/Database/Update/update_availablestacks.sql
+sed -i s/1908051448/1908260522/g E:/wagit/AAPT/Antares/Websites/src/Hosting/setup/Database/Update/update_availablestacks.sql
+
+git diff
+
+git add E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/official.definitions
+git add E:/wagit/AAPT/Antares/Websites/src/Hosting/Azure/Private.definitions
+git add E:/wagit/AAPT/Antares/Websites/src/Hosting/setup/Database/Update/update_availablestacks.sql
+git add E:/wagit/AAPT/Antares/Websites/src/Hosting/setup/Database/Update/update_availablestacks.sql
+git commit -m "rebuild images for ant85:1908260522 oryx:20190826.2"
+git push origin developer/patle/ant85

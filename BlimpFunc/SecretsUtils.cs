@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 
 
-namespace Blimp
+namespace blimp
 {
     public class SecretsUtils
     {
@@ -41,7 +41,7 @@ namespace Blimp
         public String _tenantId { get; set; }
         public String _subId { get; set; }
         public String _sendGridApiKey { get; set; }
-        public String _BlimpfuncMaster { get; set; }
+        public String _blimpfuncMaster { get; set; }
         public String _acrPassword { get; set; }
         public String _pipelineToken { get; set; }
         public AzureCredentials _credentials { get; set; }
@@ -73,11 +73,11 @@ namespace Blimp
 
                     return result.AccessToken;
                 });
-            _gitToken = (await kvClient.GetSecretAsync("https://Blimp-vault.vault.azure.net/", "gitToken")).Value;
-            _sendGridApiKey = (await kvClient.GetSecretAsync("https://Blimp-vault.vault.azure.net/", "sendGridApiKey")).Value;
-            _BlimpfuncMaster = (await kvClient.GetSecretAsync("https://Blimp-vault.vault.azure.net/", "BlimpfuncMaster")).Value;
-            _acrPassword = (await kvClient.GetSecretAsync("https://Blimp-vault.vault.azure.net/", "acrPassword")).Value;
-            _pipelineToken = (await kvClient.GetSecretAsync("https://Blimp-vault.vault.azure.net/", "pipelineToken")).Value;
+            _gitToken = (await kvClient.GetSecretAsync("https://appsvcbuild-vault.vault.azure.net/", "gitToken")).Value;
+            _sendGridApiKey = (await kvClient.GetSecretAsync("https://appsvcbuild-vault.vault.azure.net/", "sendGridApiKey")).Value;
+            _blimpfuncMaster = (await kvClient.GetSecretAsync("https://appsvcbuild-vault.vault.azure.net/", "blimpfuncMaster")).Value;
+            _acrPassword = (await kvClient.GetSecretAsync("https://appsvcbuild-vault.vault.azure.net/", "acrPassword")).Value;
+            _pipelineToken = (await kvClient.GetSecretAsync("https://appsvcbuild-vault.vault.azure.net/", "pipelineToken")).Value;
 
             if (_clientId == "")
             {
@@ -103,17 +103,17 @@ namespace Blimp
             {
                 throw new Exception("missing setting gitToken in sendGridApiKey");
             }
-            if (_BlimpfuncMaster == "")
+            if (_blimpfuncMaster == "")
             {
-                throw new Exception("missing setting gitToken in BlimpfuncMaster");
+                throw new Exception("missing setting gitToken in blimpfuncMaster");
             }
             if (_acrPassword == "")
             {
-                throw new Exception("missing setting gitToken in BlimpfuncMaster");
+                throw new Exception("missing setting gitToken in blimpfuncMaster");
             }
             if (_pipelineToken == "")
             {
-                throw new Exception("missing setting gitToken in BlimpfuncMaster");
+                throw new Exception("missing setting gitToken in blimpfuncMaster");
             }
             return;
         }
