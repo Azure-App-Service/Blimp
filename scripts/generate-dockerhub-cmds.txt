@@ -1,0 +1,29 @@
+cd C:\Users\patle\work\dotnetcore-template
+git pull upstream dev
+git checkout dev
+C:/Users/patle/AppData/Local/Programs/Python/Python37-32/python.exe generateDockerHubCommands.py -t 1908260522
+
+
+cd C:\Users\patle\work\php-template
+git pull upstream dev
+git checkout dev
+C:/Users/patle/AppData/Local/Programs/Python/Python37-32/python.exe generateDockerHubCommands.py -t 1908260522
+
+
+cd C:\Users\patle\work\python-template
+git pull upstream dev
+git checkout dev
+C:/Users/patle/AppData/Local/Programs/Python/Python37-32/python.exe generateDockerHubCommands.py -t 1908260522
+
+
+cd C:\Users\patle\work\node-template
+git pull upstream dev
+git checkout dev
+C:/Users/patle/AppData/Local/Programs/Python/Python37-32/python.exe generateDockerHubCommands.py -t 1908260522
+
+
+cd C:\Users\patle\work\ruby-template
+git pull upstream dev
+git checkout dev
+C:/Users/patle/AppData/Local/Programs/Python/Python37-32/python.exe generateDockerHubCommands.py -t 1908260522
+

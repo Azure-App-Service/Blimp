@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
-using Blimp;
+using blimp;
 
-namespace Blimpconsole
+namespace blimpconsole
 {
     class Program
     {
@@ -24,22 +24,22 @@ namespace Blimpconsole
             String text = "";
             List<BuildRequest> buildRequests = new List<BuildRequest>();
 
-            //text = getStack("kudu", "dev");
+            //text = getStack("kudu", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("dotnetcore", "dev");
+            //text = getStack("dotnetcore", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("node", "dev");
-            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
-
-            text = getStack("php", "dev");
+            text = getStack("node", "dev", "blessedImageConfig-dev.json");
             buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("python", "dev");
+            //text = getStack("php", "dev", "blessedImageConfig-save.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
-            //text = getStack("ruby", "dev");
+            //text = getStack("python", "dev", "blessedImageConfig-dev.json");
+            //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
+
+            // = getStack("ruby", "dev", "blessedImageConfig-dev.json");
             //buildRequests.AddRange(JsonConvert.DeserializeObject<List<BuildRequest>>(text));
 
             //text = File.ReadAllText("../../../requests.json");
@@ -52,9 +52,9 @@ namespace Blimpconsole
             }
         }
 
-        static String getStack(String stack, String branchName)
+        static String getStack(String stack, String branchName, string file)
         {
-            return getConfig($"https://raw.githubusercontent.com/Azure-App-Service/{stack}-template/{branchName}/blessedImageConfig-dev.json");
+            return getConfig($"https://raw.githubusercontent.com/Azure-App-Service/{stack}-template/{branchName}/{file}");
         }
 
         static String getConfig(String gitURL)
@@ -82,10 +82,8 @@ namespace Blimpconsole
             Console.WriteLine(String.Format("making tag: {0} {1}", br.Stack, br.Version));
             String stack = String.Format("{0}{1}", br.Stack.ToUpper()[0], br.Stack.ToLower().Substring(1));
             String secretKey = File.ReadAllText("../../../secret.txt");
-            //String url = String.Format("https://Blimpfunc.azurewebsites.net/api/Http{0}Pipeline?code={1}", stack, secretKey);
-            //String url = String.Format("http://localhost:7071/api/Http{0}Pipeline", stack);
-            //String url = String.Format("https://Blimpfunc-test.azurewebsites.net/api/HttpBuildPipeline_HttpStart?code={0}", secretKey);
-            String url = "http://localhost:7071/api/HttpBuildPipeline_HttpStart";
+            String url = String.Format("https://blimpfunc.azurewebsites.net/api/HttpBuildPipeline_HttpStart?code={0}", secretKey);
+            //String url = "http://localhost:7071/api/HttpBuildPipeline_HttpStart";
 
             String body = JsonConvert.SerializeObject(br);
             var client = new RestClient(url);

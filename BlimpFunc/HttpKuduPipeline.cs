@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public static class HttpKuduPipeline
     {
@@ -135,10 +135,10 @@ namespace Blimp
 
             // delete acr image
             _pipelineUtils.DeleteImage(
-                "Blimpacr",
+                "blimpacr",
                 br.OutputImageName.Split(':')[0],
                 br.OutputImageName.Split(':')[1],
-                "Blimpacr",
+                "blimpacr",
                 _secretsUtils._acrPassword
                 );
 
@@ -148,7 +148,7 @@ namespace Blimp
         public static async Task<Boolean> CreateKuduHostingStartPipeline(BuildRequest br)
         {
             String kuduVersionDash = br.Version.Replace(".", "-");
-            String taskName = String.Format("Blimp-kudu-hostingstart-{0}-task", kuduVersionDash);
+            String taskName = String.Format("blimp-kudu-hostingstart-{0}-task", kuduVersionDash);
 
             LogInfo("creating acr task for kudu hostingstart " + br.Version);
             String acrPassword = _pipelineUtils.CreateTask(taskName, br.OutputRepoURL, br.OutputRepoBranchName, br.OutputRepoName,
@@ -163,7 +163,7 @@ namespace Blimp
             LogInfo("creating github files for kudu " + br.Version);
             String timeStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             String random = new Random().Next(0, 9999).ToString();
-            String parent = String.Format("D:\\local\\Temp\\Blimp{0}{1}", timeStamp, random);
+            String parent = String.Format("D:\\local\\Temp\\blimp{0}{1}", timeStamp, random);
             _githubUtils.CreateDir(parent);
 
             String localTemplateRepoPath = String.Format("{0}\\{1}", parent, br.TemplateRepoName);
@@ -177,6 +177,7 @@ namespace Blimp
                     br.OutputRepoURL,
                     localOutputRepoPath,
                     br.OutputRepoBranchName);
+                _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             }
             else
             {
@@ -184,14 +185,13 @@ namespace Blimp
                 _githubUtils.Init(localOutputRepoPath);
                 _githubUtils.AddRemote(localOutputRepoPath, br.OutputRepoOrgName, br.OutputRepoName);
             }
-            _githubUtils.Checkout(localOutputRepoPath, br.OutputRepoBranchName);
             _githubUtils.Delete(localOutputRepoPath, skipGit: true);
             _githubUtils.DeepCopy(
                 String.Format("{0}\\{1}", localTemplateRepoPath, br.TemplateName),
                 localOutputRepoPath);
 
             _githubUtils.Stage(localOutputRepoPath, "*");
-            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[Blimp] Add kudu {0}", br.Version));
+            _githubUtils.CommitAndPush(localOutputRepoPath, br.OutputRepoBranchName, String.Format("[blimp] Add kudu {0}", br.Version));
             _githubUtils.gitDispose(localOutputRepoPath);
             _githubUtils.gitDispose(localTemplateRepoPath);
             _githubUtils.Delete(parent);

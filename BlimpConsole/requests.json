@@ -1,16 +1,18 @@
 [
     {
-        "pullRepo": null,
-        "templateRepoBranchName": "dev",
-        "stack": "ruby",
-        "pullId": null,
+        "baseImageName": "mcr.microsoft.com/oryx/php:7.3-20190708.2",
+        "outputImageName": "php:save-7.3",
+        "outputRepoBranchName": "save",
+        "outputRepoURL": "https://github.com/blessedimagepipeline/php-7.3.git",
+        "saveArtifacts": true,
+        "stack": "php",
+        "templateRepoBranchName": "logs",
+        "templateRepoURL": "https://github.com/patricklee2/php-template.git",
         "useCache": true,
-        "outputRepoURL": "https://github.com/blessedimagepipeline/ruby-2.3.8.git",
-        "outputImageName": "ruby:dev-2.3.8",
-        "version": "2.3.8",
-        "outputRepoBranchName": "dev",
-        "webAppName": "Blimp-ruby-2-3-8-dev",
-        "templateRepoURL": "https://github.com/Azure-App-Service/ruby-template.git",
-        "saveArtifacts": true
+        "version": "7.3",
+        "webAppName": "blimp-php-7-3-save",
+        "xdebugOutputImageName": "php-xdebug:save-7.3",
+        "xdebugOutputRepoBranchName": "save",
+        "xdebugOutputRepoURL": "https://github.com/blessedimagepipeline/php-xdebug-7.3.git"
     }
 ]

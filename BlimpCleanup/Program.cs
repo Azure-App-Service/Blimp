@@ -1,5 +1,5 @@
-﻿using Blimp;
-using BlimpPR;
+﻿using blimp;
+using blimpPR;
 using Microsoft.Azure.Management.ContainerRegistry;
 using Microsoft.Azure.Management.WebSites;
 using Newtonsoft.Json;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 
-namespace BlimpCleanup
+namespace blimpCleanup
 {
     class Program
     {
@@ -41,7 +41,7 @@ namespace BlimpCleanup
             cleanupACRStack("pythonapp");
             cleanupACRStack("dotnetcore");
             cleanupACRStack("ruby");
-            cleanupACRStack("kudu");
+            //cleanupACRStack("kudu");
         }
 
         private static async void cleanupACRStack(String stack)
@@ -52,12 +52,12 @@ namespace BlimpCleanup
                 new ContainerRegistryManagementClient(secretsUtils._credentials),
                 new WebSiteManagementClient(secretsUtils._credentials),
                 secretsUtils._subId);
-            var client = new RestClient(String.Format("https://Blimpacr.azurecr.io/v2/{0}/tags/list", stack));
+            var client = new RestClient(String.Format("https://blimpacr.azurecr.io/v2/{0}/tags/list", stack));
             var request = new RestRequest(Method.GET);
-            request.AddHeader("Host", "Blimpacr.azurecr.io");
+            request.AddHeader("Host", "blimpacr.azurecr.io");
                 request.AddHeader("Cache-Control", "no-cache");
                 String token = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(
-                    String.Format("{0}:{1}", "Blimpacr", secretsUtils._acrPassword)));
+                    String.Format("{0}:{1}", "blimpacr", secretsUtils._acrPassword)));
             request.AddHeader("Authorization", String.Format("Basic {0}", token));
 
             // add logic for next page // or just run again
@@ -70,7 +70,7 @@ namespace BlimpCleanup
                 if (t.Contains("2019"))
                 {
                     Console.WriteLine(String.Format("{0}:{1}", stack, t));
-                    pipelineUtils.DeleteImage("Blimpacr", stack, t, "Blimpacr", secretsUtils._acrPassword);
+                    pipelineUtils.DeleteImage("blimpacr", stack, t, "blimpacr", secretsUtils._acrPassword);
                 }
                 
             }

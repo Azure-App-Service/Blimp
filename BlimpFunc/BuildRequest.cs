@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Blimp
+namespace blimp
 {
     public class BuildRequest
     {
@@ -75,7 +75,7 @@ namespace Blimp
         [JsonProperty("testTemplateRepoName")]
         public string TestTemplateRepoName;
 
-        [JsonProperty("tesTemplateName")]
+        [JsonProperty("testTemplateName")]
         public string TestTemplateName;
 
         [JsonProperty("testTemplateRepoBranchName")]
@@ -168,12 +168,7 @@ namespace Blimp
 
         private static String getPythonTemplate(String version)
         {
-            if (new List<String> { "2.7", "3.6", "3.7" }.Contains(version))
-            {
-                return String.Format("template-{0}", version);
-            }
-
-            throw new Exception(String.Format("unexpected python version: {0}", version));
+            return String.Format("template-{0}", version);
         }
 
         private static String getRubyTemplate(String version)
@@ -330,11 +325,11 @@ namespace Blimp
             {
                 if (SaveArtifacts)
                 {
-                    WebAppName = String.Format("Blimp-{0}-hostingstart-{1}-site", Stack, Version.Replace(".", "-"));
+                    WebAppName = String.Format("blimp-{0}-{1}", Stack, Version.Replace(".", "-"));
                 }
                 else
                 {
-                    WebAppName = String.Format("Blimp-{0}-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
+                    WebAppName = String.Format("blimp-{0}-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
                 }
             }
             if (Email == null)
@@ -407,11 +402,11 @@ namespace Blimp
             {
                 if (SaveArtifacts)
                 {
-                    TestWebAppName = String.Format("Blimp-{0}-app-{1}-site", Stack, Version.Replace(".", "-"));
+                    TestWebAppName = String.Format("blimp-{0}-app-{1}-site", Stack, Version.Replace(".", "-"));
                 }
                 else
                 {
-                    TestWebAppName = String.Format("Blimp-{0}-app-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
+                    TestWebAppName = String.Format("blimp-{0}-app-{1}-{2}", Stack, Version.Replace(".", "-"), randomTag);
                 }
             }
             if (XdebugTemplateRepoURL == null)
@@ -445,7 +440,8 @@ namespace Blimp
                 if (SaveArtifacts)
                 {
                     XdebugOutputRepoURL = String.Format("https://github.com/blessedimagepipeline/{0}-xdebug-{1}.git", Stack, Version);
-                }else
+                }
+                else
                 {
                     XdebugOutputRepoURL = String.Format("https://github.com/blessedimagepipeline/{0}-xdebug-{1}-{2}.git", Stack, Version, randomTag);
                 }
