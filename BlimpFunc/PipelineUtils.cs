@@ -39,7 +39,7 @@ namespace blimp
         private WebSiteManagementClient _webappClient;
         private String _subscriptionID;
 
-        private String _rgName = "blimpRG";
+        private String _rgName = "BlimpRG";
         private String _acrName = "blimpacr";
 
         public PipelineUtils(ContainerRegistryManagementClient registryClient, WebSiteManagementClient webappClient, String subscriptionID)
@@ -123,15 +123,21 @@ namespace blimp
                 try
                 {
                     //_log.Info("creating webapp");
-
-                    _webappClient.WebApps.Delete(_rgName, appName, false, false);
+                    try
+                    { 
+                        _webappClient.WebApps.Delete(_rgName, appName, false, false);
+                    }
+                    catch
+                    {
+                        // noop
+                    }
                     AppServicePlan plan = _webappClient.AppServicePlans.Get(_rgName, planName);
 
                     //_log.Info("creating site :" + appName);
                     _webappClient.WebApps.CreateOrUpdate(_rgName, appName,
                         new Site
                         {
-                            Location = "westus2",
+                            Location = "centralus",
                             ServerFarmId = plan.Id,
                             SiteConfig = new SiteConfig
                             {
